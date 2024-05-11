@@ -3,6 +3,8 @@ import { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "./Print.css";
 import "react-toastify/dist/ReactToastify.css";
+import axios from "axios";
+
 const App = () => {
   const [rowCount, setRowCount] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
@@ -12,7 +14,8 @@ const App = () => {
   const [address, setAddress] = useState("");
   const [viewtable, setViewTable] = useState(false);
   const [itemlist, setItemList] = useState([]);
-  const [invoiceno, setInvoiceNo] = useState("GP1");
+  const sheetUrl =
+    "https://script.google.com/macros/s/AKfycbzLeR4GBJu7Npf0LUEDINf7Lu4mFtwcWhaFMBxXKc0Vba-Huy9Pk1cF9yjVIp_ma8tz/exec";
   const [itemdata, setItemData] = useState({
     item: "",
     price: 0,
@@ -20,15 +23,19 @@ const App = () => {
     weight: "",
   });
   const fetchData = async () => {
+    const formData = new FormData();
+    formData.append("op", 0);
     try {
-      const response = await fetch("https://sheetdb.io/api/v1/gjwqv8qvch90x");
-      if (!response.ok) {
-        throw new Error("Failed to fetch data");
-      }
-      const data = await response.json();
-      setRowCount(data.length);
+      const response = await axios.post(sheetUrl, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        muteHttpExceptions: true,
+      });
+      console.log(response.data); // Assuming you want to log the response data
+      setRowCount(response.data.rowCount - 1);
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.log(error);
     }
   };
 
@@ -74,7 +81,12 @@ const App = () => {
     }
   };
   const saveInfo = async (e) => {
-    if (name == "" || mobile == "" || address == "" || itemlist.length == 0) {
+    if (
+      name === "" ||
+      mobile === "" ||
+      address === "" ||
+      itemlist.length === 0
+    ) {
       toast.error("Please fill details properly");
     } else {
       e.preventDefault();
@@ -83,31 +95,31 @@ const App = () => {
         itemNameList.push(element.item);
       });
       let itemListString = itemNameList.join(", ");
-      fetch("https://sheetdb.io/api/v1/gjwqv8qvch90x", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          data: [
-            {
-              Invoice_No: "GS" + (rowCount + 1),
-              Name: name,
-              Items: itemListString,
-              Total_Weight: totalweight,
-              Total_Net: (totalPrice / 1.03).toFixed(2),
-              Tax: ((totalPrice * 3) / 103).toFixed(2),
-              Total_Incl_Tax: totalPrice.toFixed(2),
-            },
-          ],
-        }),
-      })
-        .then((response) => response.json())
-        .then((data) => console.log(data));
-      toast.success("Saved in records");
+      const formData = new FormData();
+      formData.append("op", 1);
+      formData.append("Invoice_No", "GS" + (rowCount - 1));
+      formData.append("Name", name);
+      formData.append("Items", itemListString);
+      formData.append("Total_Weight", totalweight);
+      formData.append("Total_Net", (totalPrice / 1.03).toFixed(2));
+      formData.append("Tax", ((totalPrice * 3) / 103).toFixed(2));
+      formData.append("Total_Incl_Tax", totalPrice.toFixed(2));
+
+      try {
+        const response = await axios.post(sheetUrl, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+          muteHttpExceptions: true,
+        });
+        console.log(response.data); // Assuming you want to log the response data
+        toast.success("Saved in records");
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
+
   const handleDelete = (index) => {
     setTotalPrice(Number(totalPrice) - Number(itemlist[index].price));
     setTotalWeight(Number(totalweight) - Number(itemlist[index].weight));
