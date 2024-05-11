@@ -92,7 +92,7 @@ const App = () => {
         body: JSON.stringify({
           data: [
             {
-              Invoice_No: "GP" + (rowCount + 1),
+              Invoice_No: "GS" + (rowCount + 1),
               Name: name,
               Items: itemListString,
               Total_Weight: totalweight,
@@ -155,7 +155,7 @@ const App = () => {
                   Invoice No.
                 </label>
                 <span class="bg-gray-100 text-gray-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300">
-                  GP{rowCount + 1}
+                  GS{rowCount + 1}
                 </span>
               </div>
               <div className="w-full">
