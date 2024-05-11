@@ -21,7 +21,7 @@ const App = () => {
   });
   const fetchData = async () => {
     try {
-      const response = await fetch("https://sheetdb.io/api/v1/44wr4vn2ntqkp");
+      const response = await fetch("https://sheetdb.io/api/v1/gjwqv8qvch90x");
       if (!response.ok) {
         throw new Error("Failed to fetch data");
       }
@@ -83,7 +83,7 @@ const App = () => {
         itemNameList.push(element.item);
       });
       let itemListString = itemNameList.join(", ");
-      fetch("https://sheetdb.io/api/v1/44wr4vn2ntqkp", {
+      fetch("https://sheetdb.io/api/v1/gjwqv8qvch90x", {
         method: "POST",
         headers: {
           Accept: "application/json",
