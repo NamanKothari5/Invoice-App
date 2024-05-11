@@ -96,9 +96,9 @@ const App = () => {
               Name: name,
               Items: itemListString,
               Total_Weight: totalweight,
-              Total_Net: totalPrice,
-              Tax: totalPrice * 0.03,
-              Total_Incl_Tax: totalPrice * 1.03,
+              Total_Net: (totalPrice / 1.03).toFixed(2),
+              Tax: ((totalPrice * 3) / 103).toFixed(2),
+              Total_Incl_Tax: totalPrice.toFixed(2),
             },
           ],
         }),
@@ -123,7 +123,7 @@ const App = () => {
       <section className="bg-white dark:bg-gray-900">
         <div className="py-8 px-4 mx-auto max-w-2xl lg:py-16">
           <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white">
-            Ratna Sarita Jewellers
+            RatnaSarita Jewellers
           </h1>
           <h2 className="mb-4 text-xl font-bold text-gray-900 dark:text-white">
             GSTIN: 27AAMFR8954J1ZD
@@ -338,7 +338,9 @@ const App = () => {
                       <td className="px-6 py-4">{item.item}</td>
                       <td className="px-6 py-4">{item.weight}</td>
                       <td className="px-6 py-4">{item.category}</td>
-                      <td className="px-6 py-4">{item.price}</td>
+                      <td className="px-6 py-4">
+                        ₹ {(item.price / 1.03).toFixed(2)}
+                      </td>
                       <td className="px-6 py-4 no-print">
                         <button
                           className="hover:bg-gray-100"
@@ -366,21 +368,25 @@ const App = () => {
                     <td className="px-6 py-4">Total</td>
                     <td className="px-6 py-4">{totalweight}</td>
                     <td className="px-6 py-4">{}</td>
-                    <td className="px-6 py-4">{totalPrice}</td>
+                    <td className="px-6 py-4">
+                      ₹ {(totalPrice / 1.03).toFixed(2)}
+                    </td>
                     <td className="px-6 py-4">{}</td>
                   </tr>
                   <tr className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
                     <td className="px-6 py-4">Tax</td>
                     <td className="px-6 py-4">CGST @ 1.5%</td>
                     <td className="px-6 py-4">SGST @ 1.5%</td>
-                    <td className="px-6 py-4">{totalPrice * 0.3}</td>
+                    <td className="px-6 py-4">
+                      ₹ {((totalPrice * 3) / 103).toFixed(2)}
+                    </td>
                     <td className="px-6 py-4">{}</td>
                   </tr>
                   <tr className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
                     <td className="px-6 py-4">Total Incl. Taxes</td>
                     <td className="px-6 py-4">{}</td>
                     <td className="px-6 py-4">{}</td>
-                    <td className="px-6 py-4">{totalPrice * 1.03}</td>
+                    <td className="px-6 py-4">₹ {totalPrice.toFixed(2)}</td>
                     <td className="px-6 py-4">{}</td>
                   </tr>
                 </tbody>
